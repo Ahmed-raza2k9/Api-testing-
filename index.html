@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #111827;
+            --secondary: #6b7280;
+            --border: #e5e7eb;
+            --background: #f8fafc;
+            --white: #ffffff;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --shadow: 0 10px 35px rgba(15, 23, 42, .08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--background);
+            color: var(--primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: var(--secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: .9rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: .95rem;
+            transition: .2s;
+            outline: none;
+            background: #fff;
+        }
+
+        input:focus {
+            border-color: #94a3b8;
+            box-shadow: 0 0 0 4px rgba(148, 163, 184, .15);
+        }
+
+        .btn {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-size: .95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8fafc;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px 20px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: .95rem;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .85rem;
+            font-weight: 500;
+        }
+
+        .edit-btn {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .delete-btn {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--secondary);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        @media(max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .45);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, .15);
+            animation: modalShow .25s ease;
+        }
+
+        @keyframes modalShow {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            border: none;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <div class="page-header">
+            <h1>Student Management System</h1>
+            <p>Create, manage and organize student records through your Web API.</p>
+        </div>
+
+        <div class="grid">
+
+            <!-- Form Card -->
+            <div class="card">
+
+                <div class="card-header">
+                    <h2>Add Student</h2>
+                </div>
+
+                <div class="card-body">
+
+                    <form id="studentForm">
+
+                        <div class="form-group">
+                            <label for="name">Student Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter student name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Enter email address" required>
+                        </div>
+
+                        <button type="submit" class="btn">
+                            Save Student
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- Table Card -->
+            <div class="card table-card">
+
+                <div class="card-header">
+                    <h2>Students List</h2>
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table id="studentsTable">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th width="180">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tbody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- Edit Student Modal -->
+
+    <div class="modal-overlay" id="editModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h3>Edit Student</h3>
+
+                <button type="button" class="close-btn" onclick="closeModal()">
+                    &times;
+                </button>
+
+            </div>
+
+            <form id="editStudentForm">
+
+                <input type="hidden" id="editId" name="id">
+
+                <div class="form-group">
+                    <label for="editName">
+                        Student Name
+                    </label>
+
+                    <input type="text" id="editName" name="name" placeholder="Enter student name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editEmail">
+                        Email Address
+                    </label>
+
+                    <input type="email" id="editEmail" name="email" placeholder="Enter email address" required>
+                </div>
+
+                <button type="submit" class="btn" id="updateBtn">
+                    
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="./app.js"></script>
+
+</body>
+
+</html>
