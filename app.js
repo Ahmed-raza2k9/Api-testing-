@@ -3,7 +3,7 @@ let tableBody = document.getElementById('tbody');
 async function getData() {
     tableBody.innerHTML = '';
     try {
-        const response = await fetch("https://localhost:7283/api/student");
+        const response = await fetch("https://student-api-backend-production-39ee.up.railway.app/api/student");
 
         const data = await response.json();
 
@@ -38,7 +38,7 @@ form.addEventListener('submit', (e) => {
     async function create() {
 
 
-        const response = await fetch("https://localhost:7283/api/student", {
+        const response = await fetch("https://student-api-backend-production-39ee.up.railway.app/api/student", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -61,7 +61,7 @@ form.addEventListener('submit', (e) => {
 getData();
 
 async function deleteS(id) {
-    let response = await fetch(`https://localhost:7283/api/student/${id}`, {
+    let response = await fetch(`https://student-api-backend-production-39ee.up.railway.app/api/student/${id}`, {
         method: "DELETE"
     });
     let data = await response.json();
@@ -75,7 +75,7 @@ async function deleteS(id) {
 async function edit(id) {
 
     let response = await fetch(
-        `https://localhost:7283/api/student/get/${id}`
+        `https://student-api-backend-production-39ee.up.railway.app/api/student/get/${id}`
     );
 
 
@@ -125,7 +125,7 @@ editForm.addEventListener('submit', (e) => {
     async function update() {
 
 
-        const response = await fetch("https://localhost:7283/api/student/update", {
+        const response = await fetch("https://student-api-backend-production-39ee.up.railway.app/api/student/update", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
