@@ -143,3 +143,7 @@ editForm.addEventListener('submit', (e) => {
     }
     update();
 });
+
+setInterval(() => {
+    getData();
+}, 500);
