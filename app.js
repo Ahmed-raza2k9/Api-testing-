@@ -144,6 +144,4 @@ editForm.addEventListener('submit', (e) => {
     update();
 });
 
-setInterval(() => {
-    getData();
-}, 500);
+setInterval(getData, 3000);
